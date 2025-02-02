@@ -1,11 +1,21 @@
 {
-  "name": "Example Plugin",
-  "author": "John Doe",
-  "flags": ["debug", "_root"],
-  "api_version": 1,
-  "publish": {
-    "tags": ["template", "root"],
-    "description": "Decky example plugin.",
-    "image": "https://opengraph.githubassets.com/1/SteamDeckHomebrew/PluginLoader"
-  }
+  "id": "com.yourname.brightness-overlay",
+  "name": "PWMless Brightness",
+  "description": "A plugin that controls screen brightness via opacity and overlays it instead of PWM.",
+  "author": "Daniel",
+  "version": "1.0.0",
+  "menu": {
+    "title": "PWMless Brightness",
+    "items": [
+      {
+        "label": "Enable PWMless Brightness",
+        "action": "toggleOverlay"
+      },
+      {
+        "label": "Adjust Brightness",
+        "action": "adjustBrightness"
+      }
+    ]
+  },
+  "main": "src/index.js"
 }
