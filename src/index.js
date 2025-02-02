@@ -47,8 +47,10 @@ const BrightnessOverlayPlugin = () => {
     }
   };
 
-  return (
-    <div style={{ padding: '10px', textAlign: 'center' }}>
+  return {
+    title: "Test",
+    content:(
+      <div style={{ padding: '10px', textAlign: 'center' }}>
       <h3>Brightness Overlay Plugin</h3>
       <p>Use the slider to adjust brightness and the menu to toggle the overlay.</p>
 
@@ -80,7 +82,8 @@ const BrightnessOverlayPlugin = () => {
         </div>
       </div>
     </div>
-  );
+    )
+  }
 };
 
 export default BrightnessOverlayPlugin;
