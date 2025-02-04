@@ -1,89 +1,76 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { createOverlay, usePlugin } from '@decky-frontend-lib';
+import {
+  definePlugin,
+  PanelSection,
+  PanelSectionRow,
+  SliderField,
+  ToggleField,
+  staticClasses,
+} from "decky-frontend-lib";
+import { VFC, useState, useEffect } from "react";
 
-const BrightnessOverlayPlugin = () => {
-  const [opacity, setOpacity] = useState(1.0); // Initial opacity (1.0 = full brightness)
-  const overlayRef = useRef(null);
-  const { addMenuItem } = usePlugin();
+const Overlay = () => {
+  const [enabled, setEnabled] = useState(false);
+  const [opacity, setOpacity] = useState(50); // Default opacity (50%)
 
-  // Create the overlay when the component mounts
   useEffect(() => {
-    overlayRef.current = createOverlay({
-      opacity: opacity,
-      zIndex: 9999,
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      pointerEvents: 'none',  // Avoid interfering with user clicks
-      backgroundColor: 'rgba(0, 0, 0, 0)',  // Transparent overlay
-    });
+    let overlay = document.getElementById("opacity-overlay");
 
-    // Add menu items (if needed)
-    addMenuItem('Toggle Overlay', toggleOverlay);
+    if (!overlay) {
+      overlay = document.createElement("div");
+      overlay.id = "opacity-overlay";
+      document.body.appendChild(overlay);
+    }
 
-    // Cleanup the overlay when the plugin is unloaded
+    overlay.style.position = "fixed";
+    overlay.style.top = "0";
+    overlay.style.left = "0";
+    overlay.style.width = "100vw";
+    overlay.style.height = "100vh";
+    overlay.style.backgroundColor = "black"; // Can be changed to other colors
+    overlay.style.opacity = enabled ? opacity / 100 : "0";
+    overlay.style.pointerEvents = "none"; // Allows clicks to pass through
+    overlay.style.zIndex = "9999"; // Ensure it's above everything
+
     return () => {
-      overlayRef.current?.destroy();
+      if (overlay) overlay.remove();
     };
-  }, [opacity, addMenuItem]);
+  }, [enabled, opacity]);
 
-  // Method to toggle overlay visibility
-  const toggleOverlay = () => {
-    const overlay = overlayRef.current;
-    if (overlay) {
-      const isVisible = overlay.isVisible();
-      overlay.setVisible(!isVisible);
-    }
-  };
-
-  // Method to update the brightness via opacity
-  const handleSliderChange = (event) => {
-    const newOpacity = parseFloat(event.target.value);
-    setOpacity(newOpacity);
-    if (overlayRef.current) {
-      overlayRef.current.setStyle({ opacity: newOpacity });
-    }
-  };
-
-  return {
-    title: "Test",
-    content:(
-      <div style={{ padding: '10px', textAlign: 'center' }}>
-      <h3>Brightness Overlay Plugin</h3>
-      <p>Use the slider to adjust brightness and the menu to toggle the overlay.</p>
-
-      <div style={{ marginTop: '20px' }}>
-        <label htmlFor="brightness-slider" style={{ fontSize: '16px' }}>
-          Brightness:
-        </label>
-        <input
-          type="range"
-          id="brightness-slider"
-          min="0"
-          max="1"
-          step="0.01"
-          value={opacity}
-          onChange={handleSliderChange}
-          style={{
-            width: '80%',
-            marginTop: '10px',
-            appearance: 'none',
-            height: '8px',
-            background: '#ddd',
-            borderRadius: '5px',
-            outline: 'none',
-            transition: 'background 0.3s ease',
-          }}
-        />
-        <div style={{ marginTop: '10px', fontSize: '14px' }}>
-          <span>{(opacity * 100).toFixed(0)}% Brightness</span>
-        </div>
-      </div>
+  return (
+    <div>
+      <PanelSection title="Brightness Control">
+        <PanelSectionRow>
+          <ToggleField
+            label="Enable Brightness Control"
+            checked={enabled}
+            onChange={(value) => setEnabled(value)}
+          />
+        </PanelSectionRow>
+        {enabled && (
+          <PanelSectionRow>
+            <SliderField
+              label="Brightness"
+              value={opacity}
+              step={1}
+              max={100}
+              min={0}
+              showValue={true}
+              onChange={(value) => setOpacity(value)}
+            />
+          </PanelSectionRow>
+        )}
+      </PanelSection>
     </div>
-    )
-  }
+  );
 };
 
-export default BrightnessOverlayPlugin;
+export default definePlugin(() => {
+  return {
+    title: <div className={staticClasses.Title}>PWNLess Brightness</div>,
+    content: <Overlay />,
+    onDismount() {
+      const overlay = document.getElementById("opacity-overlay");
+      if (overlay) overlay.remove(); // Remove overlay on exit
+    },
+  };
+});
