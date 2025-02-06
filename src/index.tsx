@@ -62,8 +62,9 @@ const BrightnessSettings = () => {
   );
 };
 
-export default definePlugin({
-  async onLoad() {
+// ✅ Use a class-based approach instead of `definePlugin()`
+class BrightnessOverlayPlugin {
+  onLoad() {
     console.log("Brightness Overlay Plugin Loaded");
 
     const storedOpacity = parseFloat(localStorage.getItem("brightness") || "0.5");
@@ -72,15 +73,18 @@ export default definePlugin({
     container.id = CONTAINER_ID;
     document.body.appendChild(container);
     createRoot(container).render(<Overlay opacity={storedOpacity} />);
-  },
+  }
 
-  async onUnload() {
+  onUnload() {
     console.log("Brightness Overlay Plugin Unloaded");
     document.getElementById(CONTAINER_ID)?.remove();
     document.getElementById(OVERLAY_ID)?.remove();
-  },
+  }
 
   getSettingsPanel() {
     return <BrightnessSettings />;
-  },
-});
+  }
+}
+
+// ✅ Export the class as default
+export default definePlugin(() => new BrightnessOverlayPlugin());
