@@ -62,8 +62,13 @@ const BrightnessSettings = () => {
   );
 };
 
-// ✅ Use a class-based approach instead of `definePlugin()`
 class BrightnessOverlayPlugin {
+  private client: any;
+
+  constructor(client: any) {
+    this.client = client;
+  }
+
   onLoad() {
     console.log("Brightness Overlay Plugin Loaded");
 
@@ -86,5 +91,5 @@ class BrightnessOverlayPlugin {
   }
 }
 
-// ✅ Export the class as default
-export default definePlugin(() => new BrightnessOverlayPlugin());
+// ✅ Pass `client` when defining the plugin
+export default definePlugin((client) => new BrightnessOverlayPlugin(client));
