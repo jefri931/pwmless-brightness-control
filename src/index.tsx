@@ -62,34 +62,26 @@ const BrightnessSettings = () => {
   );
 };
 
-class BrightnessOverlayPlugin {
-  private client: any;
+export default definePlugin((serverAPI) => {
+  console.log("Brightness Overlay Plugin Loaded");
 
-  constructor(client: any) {
-    this.client = client;
-  }
+  const storedOpacity = parseFloat(localStorage.getItem("brightness") || "0.5");
 
-  onLoad() {
-    console.log("Brightness Overlay Plugin Loaded");
+  const container = document.createElement("div");
+  container.id = CONTAINER_ID;
+  document.body.appendChild(container);
+  createRoot(container).render(<Overlay opacity={storedOpacity} />);
 
-    const storedOpacity = parseFloat(localStorage.getItem("brightness") || "0.5");
-
-    const container = document.createElement("div");
-    container.id = CONTAINER_ID;
-    document.body.appendChild(container);
-    createRoot(container).render(<Overlay opacity={storedOpacity} />);
-  }
-
-  onUnload() {
-    console.log("Brightness Overlay Plugin Unloaded");
-    document.getElementById(CONTAINER_ID)?.remove();
-    document.getElementById(OVERLAY_ID)?.remove();
-  }
-
-  getSettingsPanel() {
-    return <BrightnessSettings />;
-  }
-}
-
-// ✅ Pass `client` when defining the plugin
-export default definePlugin((client) => new BrightnessOverlayPlugin(client));
+  return {
+    title: <div className={staticClasses.Title}>PWNless Brightness</div>,
+    content: (
+      <BrightnessSettings />
+    ),
+    //icon: <FaEyeDropper />,
+    onDismount() {
+      console.log("Brightness Overlay Plugin Unloaded");
+      document.getElementById(CONTAINER_ID)?.remove();
+      document.getElementById(OVERLAY_ID)?.remove();
+    },
+  };
+});
