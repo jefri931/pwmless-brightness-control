@@ -6,6 +6,7 @@ import {
   ToggleField,
   staticClasses,
 } from "decky-frontend-lib";
+import { FaEyeDropper } from "react-icons/fa";
 import { VFC, useState, useEffect } from "react";
 
 const Overlay = () => {
@@ -68,6 +69,7 @@ export default definePlugin(() => {
   return {
     title: <div className={staticClasses.Title}>PWNLess Brightness</div>,
     content: <Overlay />,
+    icon: <FaEyeDropper />,
     onDismount() {
       const overlay = document.getElementById("opacity-overlay");
       if (overlay) overlay.remove(); // Remove overlay on exit

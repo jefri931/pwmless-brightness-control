@@ -18,10 +18,6 @@
   ],
   "author": "Sefa Eyeoglu <contact@scrumplex.net>",
   "license": "LGPL-3.0-or-later",
-  "bugs": {
-    "url": "https://github.com/libvibrant/vibrantDeck/issues"
-  },
-  "homepage": "https://github.com/libvibrant/vibrantDeck#readme",
   "devDependencies": {
     "@rollup/plugin-commonjs": "21.1.0",
     "@rollup/plugin-json": "4.1.0",
