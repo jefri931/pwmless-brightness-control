@@ -1,7 +1,8 @@
 {
-  "name": "vibrant-deck",
+  "name": "pwnless-brightness",
   "version": "2.0.1",
   "description": "Adjust color settings of your Deck",
+  "type": "module",
   "scripts": {
     "build": "shx rm -rf dist && rollup -c",
     "watch": "rollup -c -w",
