@@ -74,7 +74,7 @@ export default definePlugin((serverAPI) => {
   createRoot(container).render(<Overlay opacity={storedOpacity} />);
 
   return {
-    title: <div className={staticClasses.Title}>PWNless Brightness</div>,
+    title: <div>PWNless Brightness</div>,
     content: (
       <BrightnessSettings />
     ),
