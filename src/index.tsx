@@ -1,6 +1,7 @@
 import { definePlugin, PanelSection, PanelSectionRow, SliderField } from "decky-frontend-lib";
 import { useState, useEffect } from "react";
 import { createRoot } from "react-dom/client";
+import { FaEyeDropper } from "react-icons/fa";
 
 const OVERLAY_ID = "brightness-overlay";
 const CONTAINER_ID = "decky-brightness-container";
@@ -77,7 +78,7 @@ export default definePlugin((serverAPI) => {
     content: (
       <BrightnessSettings />
     ),
-    //icon: <FaEyeDropper />,
+    icon: <FaEyeDropper />,
     onDismount() {
       console.log("Brightness Overlay Plugin Unloaded");
       document.getElementById(CONTAINER_ID)?.remove();
