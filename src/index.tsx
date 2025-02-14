@@ -10,7 +10,7 @@ import { useState } from "react";
 import { FaEyeDropper } from "react-icons/fa";
 
 const BrightnessSettings = ({ onBrightnessChange }) => {
-  const [opacity, setOpacity] = useState(1);
+  const [opacity, setOpacity] = useState(0.5);
 
   const updateBrightness = async (newOpacity: number) => {
     setOpacity(newOpacity);
