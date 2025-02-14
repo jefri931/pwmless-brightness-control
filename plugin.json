@@ -1,10 +1,10 @@
 {
-  "name": "PWNless Brightness Control",
-  "author": "Daniel Stoynev",
+  "name": "pwnless-brightness",
+  "author": "Scrumplex",
   "flags": [],
-  "api_version": 1,
   "publish": {
-    "tags": ["pwnless"],
-    "description": "Brightness Control without PWN"
+    "tags": ["pwm", "birghtness"],
+    "description": "Adjust Brightness without PWM",
+    "image": "https://raw.githubusercontent.com/libvibrant/vibrantDeck/main/assets/screenshot.jpg"
   }
 }

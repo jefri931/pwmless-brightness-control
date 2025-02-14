@@ -1,38 +1,33 @@
-import { definePlugin, PanelSection, PanelSectionRow, SliderField } from "decky-frontend-lib";
+import {
+  definePlugin,
+  PanelSection,
+  PanelSectionRow,
+  SliderField,
+  staticClasses,
+} from "decky-frontend-lib";
 import { useState, useEffect } from "react";
-import { createRoot } from "react-dom/client";
 import { FaEyeDropper } from "react-icons/fa";
 
 const OVERLAY_ID = "brightness-overlay";
-const CONTAINER_ID = "decky-brightness-container";
 
-const Overlay = ({ opacity }: { opacity: number }) => {
-  useEffect(() => {
-    let overlay = document.getElementById(OVERLAY_ID) as HTMLDivElement;
+const createOverlay = (opacity: number) => {
+  let overlay = document.getElementById(OVERLAY_ID) as HTMLDivElement;
 
-    if (!overlay) {
-      overlay = document.createElement("div");
-      overlay.id = OVERLAY_ID;
-      overlay.style.position = "absolute";
-      overlay.style.top = "0";
-      overlay.style.left = "0";
-      overlay.style.width = "100vw";
-      overlay.style.height = "100vh";
-      overlay.style.backgroundColor = `rgba(0, 0, 0, ${opacity})`;
-      overlay.style.zIndex = "9999";
-      overlay.style.pointerEvents = "none"; // Doesn't block clicks
-
-      document.body.appendChild(overlay);
-    }
-
+  if (!overlay) {
+    overlay = document.createElement("div");
+    overlay.id = OVERLAY_ID;
+    overlay.style.position = "fixed";
+    overlay.style.top = "0";
+    overlay.style.left = "0";
+    overlay.style.width = "100vw";
+    overlay.style.height = "100vh";
     overlay.style.backgroundColor = `rgba(0, 0, 0, ${opacity})`;
+    overlay.style.zIndex = "9999";
+    overlay.style.pointerEvents = "none"; // Allows clicking through
+    document.body.appendChild(overlay);
+  }
 
-    return () => {
-      overlay.remove();
-    };
-  }, [opacity]);
-
-  return null;
+  overlay.style.backgroundColor = `rgba(0, 0, 0, ${opacity})`;
 };
 
 const BrightnessSettings = () => {
@@ -40,10 +35,14 @@ const BrightnessSettings = () => {
     return parseFloat(localStorage.getItem("brightness") || "0.5");
   });
 
+  useEffect(() => {
+    createOverlay(opacity);
+  }, [opacity]);
+
   const updateBrightness = (newOpacity: number) => {
     setOpacity(newOpacity);
     localStorage.setItem("brightness", newOpacity.toString());
-    document.getElementById(OVERLAY_ID)!.style.backgroundColor = `rgba(0, 0, 0, ${newOpacity})`;
+    createOverlay(newOpacity);
   };
 
   return (
@@ -63,25 +62,16 @@ const BrightnessSettings = () => {
   );
 };
 
-export default definePlugin((serverAPI) => {
-  console.log("Brightness Overlay Plugin Loaded");
-
+export default definePlugin(() => {
   const storedOpacity = parseFloat(localStorage.getItem("brightness") || "0.5");
-
-  const container = document.createElement("div");
-  container.id = CONTAINER_ID;
-  document.body.appendChild(container);
-  createRoot(container).render(<Overlay opacity={storedOpacity} />);
+  createOverlay(storedOpacity); // Ensure overlay is added on plugin load
 
   return {
-    title: <div>PWNless Brightness</div>,
-    content: (
-      <BrightnessSettings />
-    ),
+    title: <div className={staticClasses.Title}>PWNless Brightness</div>,
+    content: <BrightnessSettings />,
     icon: <FaEyeDropper />,
     onDismount() {
       console.log("Brightness Overlay Plugin Unloaded");
-      document.getElementById(CONTAINER_ID)?.remove();
       document.getElementById(OVERLAY_ID)?.remove();
     },
   };
