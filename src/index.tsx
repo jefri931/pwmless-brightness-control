@@ -22,7 +22,7 @@ const createOverlay = (opacity: number) => {
     overlay.style.width = "100vw";
     overlay.style.height = "100vh";
     overlay.style.backgroundColor = `rgba(0, 0, 0, ${opacity})`;
-    overlay.style.zIndex = "9999";
+    overlay.style.zIndex = "999999";
     overlay.style.pointerEvents = "none"; // Allows clicking through
     document.body.appendChild(overlay);
   }
