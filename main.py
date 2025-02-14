@@ -1,57 +1,69 @@
 import os
-
-# The decky plugin module is located at decky-loader/plugin
-# For easy intellisense checkout the decky-loader code repo
-# and add the `decky-loader/plugin/imports` path to `python.analysis.extraPaths` in `.vscode/settings.json`
-import decky
 import asyncio
+import threading
+import decky_plugin
+import gi
+
+gi.require_version("Gtk", "3.0")
+from gi.repository import Gtk, Gdk
+
+class OverlayWindow(Gtk.Window):
+    def __init__(self, opacity=0.5):
+        Gtk.Window.__init__(self, type=Gtk.WindowType.POPUP)
+        self.set_decorated(False)
+        self.set_app_paintable(True)
+        self.set_visual(self.get_screen().get_rgba_visual())
+        self.override_background_color(Gtk.StateFlags.NORMAL, Gdk.RGBA(0, 0, 0, opacity))
+        self.set_keep_above(True)
+        self.fullscreen()
+
+    def update_opacity(self, opacity):
+        self.override_background_color(Gtk.StateFlags.NORMAL, Gdk.RGBA(0, 0, 0, opacity))
+
+overlay = None
+gtk_thread = None
+
+def run_gtk(opacity):
+    global overlay
+    decky_plugin.logger.info("Starting GTK Overlay Thread")
+
+    overlay = OverlayWindow(opacity)
+    overlay.connect("destroy", Gtk.main_quit)
+    overlay.show_all()
+
+    Gtk.main()
+    decky_plugin.logger.info("GTK Main Loop Exited")
+
+async def start_overlay(opacity=0.5):
+    global gtk_thread
+    if gtk_thread is None:
+        gtk_thread = threading.Thread(target=run_gtk, args=(opacity,), daemon=True)
+        gtk_thread.start()
+
+async def set_brightness(opacity: float):
+    global overlay
+    if overlay:
+        decky_plugin.logger.info(f"Updating Overlay Opacity: {opacity}")
+        overlay.update_opacity(opacity)
+
+async def stop_overlay():
+    global overlay, gtk_thread
+    if overlay:
+        decky_plugin.logger.info("Stopping Overlay Window")
+        overlay.destroy()
+        overlay = None
+    if gtk_thread:
+        gtk_thread.join(timeout=1)
+        gtk_thread = None
 
 class Plugin:
-    # A normal method. It can be called from the TypeScript side using @decky/api.
-    async def add(self, left: int, right: int) -> int:
-        return left + right
+    async def on_load(self):
+        decky_plugin.logger.info("Starting Brightness Overlay Plugin")
+        await start_overlay(0.5)
 
-    async def long_running(self):
-        await asyncio.sleep(15)
-        # Passing through a bunch of random data, just as an example
-        await decky.emit("timer_event", "Hello from the backend!", True, 2)
+    async def on_unload(self):
+        decky_plugin.logger.info("Stopping Brightness Overlay Plugin")
+        await stop_overlay()
 
-    # Asyncio-compatible long-running code, executed in a task when the plugin is loaded
-    async def _main(self):
-        self.loop = asyncio.get_event_loop()
-        decky.logger.info("Hello World!")
-
-    # Function called first during the unload process, utilize this to handle your plugin being stopped, but not
-    # completely removed
-    async def _unload(self):
-        decky.logger.info("Goodnight World!")
-        pass
-
-    # Function called after `_unload` during uninstall, utilize this to clean up processes and other remnants of your
-    # plugin that may remain on the system
-    async def _uninstall(self):
-        decky.logger.info("Goodbye World!")
-        pass
-
-    async def start_timer(self):
-        self.loop.create_task(self.long_running())
-
-    # Migrations that should be performed before entering `_main()`.
-    async def _migration(self):
-        decky.logger.info("Migrating")
-        # Here's a migration example for logs:
-        # - `~/.config/decky-template/template.log` will be migrated to `decky.decky_LOG_DIR/template.log`
-        decky.migrate_logs(os.path.join(decky.DECKY_USER_HOME,
-                                               ".config", "decky-template", "template.log"))
-        # Here's a migration example for settings:
-        # - `~/homebrew/settings/template.json` is migrated to `decky.decky_SETTINGS_DIR/template.json`
-        # - `~/.config/decky-template/` all files and directories under this root are migrated to `decky.decky_SETTINGS_DIR/`
-        decky.migrate_settings(
-            os.path.join(decky.DECKY_HOME, "settings", "template.json"),
-            os.path.join(decky.DECKY_USER_HOME, ".config", "decky-template"))
-        # Here's a migration example for runtime data:
-        # - `~/homebrew/template/` all files and directories under this root are migrated to `decky.decky_RUNTIME_DIR/`
-        # - `~/.local/share/decky-template/` all files and directories under this root are migrated to `decky.decky_RUNTIME_DIR/`
-        decky.migrate_runtime(
-            os.path.join(decky.DECKY_HOME, "template"),
-            os.path.join(decky.DECKY_USER_HOME, ".local", "share", "decky-template"))
+    async def set_brightness(self, opacity: float):
+        await set_brightness(opacity)
