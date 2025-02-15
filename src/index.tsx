@@ -10,7 +10,7 @@ import { useState } from "react";
 import { FaEyeDropper } from "react-icons/fa";
 import Overlay from "./overlay";
 
-const BrightnessSettings = ({ onBrightnessChange }) => {
+const BrightnessSettings = ({ logs, onBrightnessChange }) => {
   const [opacity, setOpacity] = useState(0.5);
 
   const updateBrightness = async (newOpacity: number) => {
@@ -31,15 +31,17 @@ const BrightnessSettings = ({ onBrightnessChange }) => {
           onChange={updateBrightness}
         />
       </PanelSectionRow>
+      <div>{logs}</div>
     </PanelSection>
   );
 };
 
 export default definePlugin((serverAPI: ServerAPI) => {
   serverAPI.routerHook.addGlobalComponent("BlackOverlay", () => (<Overlay />));
+  console.log(serverAPI.routerHook)
   return {
   title: <div className={staticClasses.Title}>PWNless Brightness</div>,
-  content: <BrightnessSettings onBrightnessChange={(opacity: number) => {
+  content: <BrightnessSettings logs={JSON.stringify(serverAPI.routerHook)} onBrightnessChange={(opacity: number) => {
     
   }} />,
   icon: <FaEyeDropper />,
