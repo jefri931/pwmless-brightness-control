@@ -8,6 +8,7 @@ import {
 } from "decky-frontend-lib";
 import { useState } from "react";
 import { FaEyeDropper } from "react-icons/fa";
+import Overlay from "./overlay";
 
 const BrightnessSettings = ({ onBrightnessChange }) => {
   const [opacity, setOpacity] = useState(0.5);
@@ -34,10 +35,12 @@ const BrightnessSettings = ({ onBrightnessChange }) => {
   );
 };
 
-export default definePlugin((serverAPI: ServerAPI) => ({
+export default definePlugin((serverAPI: ServerAPI) => {
+  serverAPI.routerHook.addGlobalComponent("BlackOverlay", () => (<Overlay />));
+  return {
   title: <div className={staticClasses.Title}>PWNless Brightness</div>,
   content: <BrightnessSettings onBrightnessChange={(opacity: number) => {
-    serverAPI.callPluginMethod("set_brightness", { opacity });
+    
   }} />,
   icon: <FaEyeDropper />,
-}));
+}});
