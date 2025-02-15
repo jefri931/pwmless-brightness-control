@@ -37,7 +37,7 @@ const BrightnessSettings = ({ onBrightnessChange }) => {
 export default definePlugin((serverAPI: ServerAPI) => ({
   title: <div className={staticClasses.Title}>PWNless Brightness</div>,
   content: <BrightnessSettings onBrightnessChange={(opacity: number) => {
-    serverAPI.callPluginMethod("set_brightness", { opacity: opacity });
+    serverAPI.callPluginMethod("set_brightness", { opacity });
   }} />,
   icon: <FaEyeDropper />,
 }));
