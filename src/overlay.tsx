@@ -9,7 +9,7 @@ const Overlay = ({ opacity = 0.5, backgroundColor = 'black' }) => {
     height: '100vh',
     backgroundColor: backgroundColor,
     opacity: opacity,
-    zIndex: 9999,
+    zIndex: 999999,
     pointerEvents: 'none' // Allows interaction with underlying elements if needed
   };
 
