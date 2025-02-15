@@ -39,28 +39,6 @@ const BrightnessSettings = ({ logs, onBrightnessChange }) => {
 
 export default definePlugin((serverAPI: ServerAPI) => {
   //serverAPI.routerHook.addGlobalComponent("BlackOverlay", () => (<Overlay />));
-  serverAPI.routerHook.addPatch("/", (routeProps) => {
-    // Get the original element from the route properties.
-    const OriginalElement = routeProps.element;
-    
-    // Modify the element property to wrap the original element
-    // with additional logic.
-    routeProps.element = (props) => {
-      // Execute your extra logic.
-      console.log("Extra logic executed before '/' route renders");
-      
-      // Render the original element with its props.
-      return (<>
-      <Overlay />
-      <OriginalElement {...props} />
-      </>
-    );
-    };
-    
-    // Return the modified routeProps.
-    return routeProps;
-  });
-
   return {
   title: <div className={staticClasses.Title}>PWNless Brightness</div>,
   content: <BrightnessSettings logs={JSON.stringify(serverAPI.routerHook)} onBrightnessChange={(opacity: number) => {
