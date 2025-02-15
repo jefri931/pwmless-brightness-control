@@ -21,6 +21,7 @@ const BrightnessSettings = ({ logs, onBrightnessChange }) => {
   return (
     <PanelSection title="Brightness Overlay">
       <PanelSectionRow>
+        <Overlay />
         <SliderField
           label="Screen Brightness"
           value={opacity}
@@ -37,8 +38,7 @@ const BrightnessSettings = ({ logs, onBrightnessChange }) => {
 };
 
 export default definePlugin((serverAPI: ServerAPI) => {
-  serverAPI.routerHook.addGlobalComponent("BlackOverlay", () => (<Overlay />));
-  console.log(serverAPI.routerHook)
+  //serverAPI.routerHook.addGlobalComponent("BlackOverlay", () => (<Overlay />));
   return {
   title: <div className={staticClasses.Title}>PWNless Brightness</div>,
   content: <BrightnessSettings logs={JSON.stringify(serverAPI.routerHook)} onBrightnessChange={(opacity: number) => {
