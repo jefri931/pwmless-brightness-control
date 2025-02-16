@@ -23,7 +23,9 @@ class OverlayWindow(QWidget):
         painter.fillRect(self.rect(), QColor(0, 0, 0, 127))  # 50% opacity black overlay
 
 if __name__ == "__main__":
+    print("Starting overlay application...")
     app = QApplication(sys.argv)
     overlay = OverlayWindow()
     overlay.show()
+    print("Overlay window should be visible now.")
     sys.exit(app.exec_())
