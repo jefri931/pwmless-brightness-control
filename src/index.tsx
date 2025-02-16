@@ -32,6 +32,7 @@ const BrightnessSettings = ({ onBrightnessChange }) => {
           onChange={updateBrightness}
         />
       </PanelSectionRow>
+      <div>{document.body}</div>
     </PanelSection>
   );
 };
