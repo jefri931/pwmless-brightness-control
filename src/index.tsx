@@ -21,7 +21,6 @@ const BrightnessSettings = ({ onBrightnessChange }) => {
   return (
     <PanelSection title="Brightness Overlay">
       <PanelSectionRow>
-        <Overlay />
         <SliderField
           label="Screen Brightness"
           value={opacity}
