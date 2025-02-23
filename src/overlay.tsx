@@ -1,6 +1,15 @@
 import React from 'react';
+import {
+  Router,
+  WindowRouter,
+  getGamepadNavigationTrees,
+} from "@decky/ui";
+
 
 const Overlay = ({ opacity = 0.5, backgroundColor = 'black' }) => {
+  const root: WindowRouter & any = Router.WindowStore?.GamepadUIMainWindowInstance;
+  console.log(root)
+  console.log(Router)
   const overlayStyle = {
     position: 'fixed',
     top: 0,

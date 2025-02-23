@@ -36,22 +36,8 @@ const BrightnessSettings = ({ onBrightnessChange }) => {
 };
 
 export default definePlugin((serverAPI: ServerAPI) => {
-  //serverAPI.routerHook.addGlobalComponent("BlackOverlay", () => (<Overlay />));
-  let overlay = document.getElementById("brightness-overlay");
-  if (!overlay) {
-    overlay = document.createElement("div");
-    overlay.id = "brightness-overlay";
-    overlay.style.position = "fixed";
-    overlay.style.top = "0";
-    overlay.style.left = "0";
-    overlay.style.width = "100vw";
-    overlay.style.height = "100vh";
-    overlay.style.background = "rgba(0, 0, 0, 0.5)";
-    overlay.style.pointerEvents = "none"; // Prevent interaction blocking
-    overlay.style.zIndex = "9999"; // Ensure it's on top
-    document.body.appendChild(overlay);
-  }
-  
+  serverAPI.routerHook.addGlobalComponent("BlackOverlay", () => (<Overlay />));
+
   return {
   title: <div className={staticClasses.Title}>PWNless Brightness</div>,
   content: <BrightnessSettings onBrightnessChange={(opacity: number) => {
