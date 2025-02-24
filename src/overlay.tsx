@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   Router,
   WindowRouter,
@@ -7,22 +7,32 @@ import {
 
 
 const Overlay = ({ opacity = 0.5, backgroundColor = 'black' }) => {
-  const root: WindowRouter & any = Router.WindowStore?.GamepadUIMainWindowInstance;
-  console.log(root)
-  console.log(Router)
-  const overlayStyle = {
-    position: 'fixed',
-    top: 0,
-    left: 0,
-    width: '100vw',
-    height: '100vh',
-    backgroundColor: backgroundColor,
-    opacity: opacity,
-    zIndex: 999999,
-    pointerEvents: 'none' // Allows interaction with underlying elements if needed
-  };
+  if(!window['pwnless']) {
+    const root: WindowRouter & any = Router.WindowStore?.GamepadUIMainWindowInstance;
+    const view = root.CreateBrowserView("pwnless");
+    const browser = view.GetBrowser();
 
-  return <div style={overlayStyle} />;
+    window['pwnless' as any] = view;
+  }
+
+  useEffect(() => {
+    const htmlContent = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="UTF-8">
+        <title></title>
+      </head>
+      <body>
+        <div style="position: fixed; top: 0; left: 0; width:100vw; height: 100vh; background-color: ${background}; opacity: ${opacity}; z-index: 999999; pointer-events: none;"></div>
+      </body>
+      </html>
+    `;
+
+    window['pwnless'].LoadHTML(htmlContent);
+  }, [opacity, backgroundColor])
+
+  return <></>;
 };
 
 export default Overlay;
