@@ -1,8 +1,7 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import {
   Router,
-  WindowRouter,
-  getGamepadNavigationTrees,
+  WindowRouter
 } from "@decky/ui";
 
 
@@ -10,7 +9,6 @@ const Overlay = ({ opacity = 0.5, backgroundColor = 'black' }) => {
   if(!window['pwnless']) {
     const root: WindowRouter & any = Router.WindowStore?.GamepadUIMainWindowInstance;
     const view = root.CreateBrowserView("pwnless");
-    const browser = view.GetBrowser();
 
     window['pwnless' as any] = view;
   }
@@ -24,7 +22,7 @@ const Overlay = ({ opacity = 0.5, backgroundColor = 'black' }) => {
         <title></title>
       </head>
       <body>
-        <div style="position: fixed; top: 0; left: 0; width:100vw; height: 100vh; background-color: ${background}; opacity: ${opacity}; z-index: 999999; pointer-events: none;"></div>
+        <div style="position: fixed; top: 0; left: 0; width:100vw; height: 100vh; background-color: ${backgroundColor}; opacity: ${opacity}; z-index: 999999; pointer-events: none;"></div>
       </body>
       </html>
     `;
