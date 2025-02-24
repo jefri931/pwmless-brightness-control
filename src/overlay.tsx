@@ -29,6 +29,7 @@ const Overlay = ({ opacity = 0.5, backgroundColor = 'black' }) => {
       </html>
     `;
 
+    console.log(window)
     window['pwnless-browser'].LoadHTML(htmlContent);
   }, [opacity, backgroundColor])
 
