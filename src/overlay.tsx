@@ -31,7 +31,8 @@ const Overlay = ({ opacity = 0.5, backgroundColor = 'black' }) => {
 
     console.log("window logged here")
     console.log(window)
-    //window['pwnless-browser'].LoadHTML(htmlContent);
+    const dataUrl = "data:text/html;charset=utf-8," + encodeURIComponent(htmlContent);
+    window['pwnless-browser'].LoadURL(dataUrl);
   }, [opacity, backgroundColor])
 
   return <></>;
