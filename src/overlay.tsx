@@ -29,8 +29,9 @@ const Overlay = ({ opacity = 0.5, backgroundColor = 'black' }) => {
       </html>
     `;
 
+    console.log("window logged here")
     console.log(window)
-    window['pwnless-browser'].LoadHTML(htmlContent);
+    //window['pwnless-browser'].LoadHTML(htmlContent);
   }, [opacity, backgroundColor])
 
   return <></>;
