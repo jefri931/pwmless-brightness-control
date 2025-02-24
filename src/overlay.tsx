@@ -9,8 +9,10 @@ const Overlay = ({ opacity = 0.5, backgroundColor = 'black' }) => {
   if(!window['pwnless']) {
     const root: WindowRouter & any = Router.WindowStore?.GamepadUIMainWindowInstance;
     const view = root.CreateBrowserView("pwnless");
+    const browser = view.GetBrowser();
 
     window['pwnless' as any] = view;
+    window['pwnless-browser' as any] = browser
   }
 
   useEffect(() => {
@@ -27,7 +29,7 @@ const Overlay = ({ opacity = 0.5, backgroundColor = 'black' }) => {
       </html>
     `;
 
-    window['pwnless'].LoadHTML(htmlContent);
+    window['pwnless-browser'].LoadHTML(htmlContent);
   }, [opacity, backgroundColor])
 
   return <></>;
