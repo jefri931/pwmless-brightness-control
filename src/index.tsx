@@ -36,12 +36,18 @@ const BrightnessSettings = ({ onBrightnessChange }) => {
 };
 
 export default definePlugin((serverAPI: ServerAPI) => {
-  serverAPI.routerHook.addGlobalComponent("BlackOverlay", Overlay);
+  const [opacity, setOpacity] = useState(localStorage.getItem("pwmlessbrightness") ?? 0); // Store brightness level
+
+  // Function to update brightness & trigger re-render of overlay
+  const updateBrightness = (newOpacity: number) => {
+    setOpacity(newOpacity);
+    localStorage.setItem("pwmlessbrightness", newOpacity.toString())
+  };
+
+  serverAPI.routerHook.addGlobalComponent("BlackOverlay", (props) => <Overlay {...props} opacity={opacity} />);
 
   return {
   title: <div className={staticClasses.Title}>PWNless Brightness</div>,
-  content: <BrightnessSettings onBrightnessChange={(opacity: number) => {
-    
-  }} />,
+  content: <BrightnessSettings onBrightnessChange={updateBrightness} />,
   icon: <FaEyeDropper />,
 }});
