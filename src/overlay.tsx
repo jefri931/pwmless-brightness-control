@@ -1,41 +1,55 @@
-import { useEffect } from 'react';
-import {
-  Router,
-  WindowRouter
-} from "@decky/ui";
+import { findModuleChild } from "decky-frontend-lib";
+import { VFC } from "react";
 
+enum UIComposition {
+  Hidden = 0,
+  Notification = 1,
+  Overlay = 2,
+  Opaque = 3,
+  OverlayKeyboard = 4,
+}
+
+type UseUIComposition = (composition: UIComposition) => {
+  releaseComposition: () => void;
+};
+
+const useUIComposition: UseUIComposition = findModuleChild((m) => {
+  if (typeof m !== "object") return undefined;
+  for (let prop in m) {
+    if (
+      typeof m[prop] === "function" &&
+      m[prop].toString().includes("AddMinimumCompositionStateRequest") &&
+      m[prop].toString().includes("ChangeMinimumCompositionStateRequest") &&
+      m[prop].toString().includes("RemoveMinimumCompositionStateRequest") &&
+      !m[prop].toString().includes("m_mapCompositionStateRequests")
+    ) {
+      return m[prop];
+    }
+  }
+});
+
+const UICompositionProxy: VFC = () => {
+  useUIComposition(UIComposition.Notification);
+  return null;
+};
 
 const Overlay = ({ opacity = 0.5, backgroundColor = 'black' }) => {
-  if(!window['pwnless']) {
-    const root: WindowRouter & any = Router.WindowStore?.GamepadUIMainWindowInstance;
-    const view = root.CreateBrowserView("pwnless");
-    const browser = view.GetBrowser();
-
-    window['pwnless' as any] = view;
-    window['pwnless-browser' as any] = browser
-  }
-
-  useEffect(() => {
-    const htmlContent = `
-      <!DOCTYPE html>
-      <html>
-      <head>
-        <meta charset="UTF-8">
-        <title></title>
-      </head>
-      <body>
-        <div style="position: fixed; top: 0; left: 0; width:100vw; height: 100vh; background-color: ${backgroundColor}; opacity: ${opacity}; z-index: 999999; pointer-events: none;"></div>
-      </body>
-      </html>
-    `;
-
-    console.log("window logged here")
-    console.log(window)
-    const dataUrl = "data:text/html;charset=utf-8," + encodeURIComponent(htmlContent);
-    window['pwnless-browser'].LoadURL(dataUrl);
-  }, [opacity, backgroundColor])
-
-  return <></>;
+  return (<div
+    id="brightness_bar_container"
+    style={{
+      left: 0,
+      top: 0,
+      width: "100vw",
+      height: "100vh",
+      background: backgroundColor,
+      zIndex: 7001, // volume bar is 7000
+      position: "fixed",
+      opacity,
+      pointerEvents: "none"
+    }}
+  >
+    <UICompositionProxy />
+  </div>)
 };
 
 export default Overlay;

@@ -36,7 +36,7 @@ const BrightnessSettings = ({ onBrightnessChange }) => {
 };
 
 export default definePlugin((serverAPI: ServerAPI) => {
-  serverAPI.routerHook.addGlobalComponent("BlackOverlay", () => (<Overlay />));
+  serverAPI.routerHook.addGlobalComponent("BlackOverlay", Overlay);
 
   return {
   title: <div className={staticClasses.Title}>PWNless Brightness</div>,
