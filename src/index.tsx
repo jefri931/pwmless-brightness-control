@@ -10,8 +10,8 @@ import { useState } from "react";
 import { FaEyeDropper } from "react-icons/fa";
 import Overlay from "./overlay";
 
-const BrightnessSettings = ({ onBrightnessChange }) => {
-  const [opacity, setOpacity] = useState(0.5);
+const BrightnessSettings = ({ onBrightnessChange, originalOpacity = 0.0 }) => {
+  const [opacity, setOpacity] = useState(originalOpacity);
 
   const updateBrightness = async (newOpacity: number) => {
     setOpacity(newOpacity);
@@ -35,7 +35,7 @@ const BrightnessSettings = ({ onBrightnessChange }) => {
   );
 };
 
-let pwmOpacity = parseFloat(localStorage.getItem("pwmlessbrightness") ?? "0.0")
+let pwmOpacity = parseFloat(localStorage.getItem("pwmlessbrightness") ?? "0.5")
 
 export default definePlugin((serverAPI: ServerAPI) => {
   // Function to update brightness & trigger re-render of overlay
@@ -55,6 +55,6 @@ export default definePlugin((serverAPI: ServerAPI) => {
 
   return {
   title: <div className={staticClasses.Title}>PWNless Brightness</div>,
-  content: <BrightnessSettings onBrightnessChange={updateBrightness} />,
+  content: <BrightnessSettings onBrightnessChange={updateBrightness} originalOpacity={pwmOpacity} />,
   icon: <FaEyeDropper />,
 }});
