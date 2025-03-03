@@ -33,11 +33,7 @@ const UICompositionProxy: VFC = () => {
   return null;
 };
 
-const Overlay = ({ opacity = 0.5, backgroundColor = 'black', initOverlay }) => {
-  const [dummy, setDummy] = useState(false)
-  useEffect(() => {
-    initOverlay(setDummy)
-  }, [])
+const Overlay = ({ opacity = 0.5, backgroundColor = 'black' }) => {
   return (<div
     id="brightness_bar_container"
     style={{

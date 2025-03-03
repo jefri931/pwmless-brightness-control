@@ -36,22 +36,31 @@ const BrightnessSettings = ({ onBrightnessChange, originalOpacity = 0.0 }) => {
 };
 
 let pwmOpacity = parseFloat(localStorage.getItem("pwmlessbrightness") ?? "0.5")
+let brightnessUpdateTimeout: NodeJS.Timeout | null = null; 
 
 export default definePlugin((serverAPI: ServerAPI) => {
   // Function to update brightness & trigger re-render of overlay
-  let rerenderOverlay: (() => void) | null = null
-  const initOverlay = (rerender: (() => void) | null) => {
-    rerenderOverlay = rerender
-  }
   const updateBrightness = (newOpacity: number) => {
     pwmOpacity = newOpacity
     localStorage.setItem("pwmlessbrightness", newOpacity.toString())
-    if(rerenderOverlay) {
-      rerenderOverlay()
+    if (brightnessUpdateTimeout) {
+      clearTimeout(brightnessUpdateTimeout);
     }
+  
+    // Set a new timeout for 2 seconds
+    brightnessUpdateTimeout = setTimeout(() => {
+      serverAPI.routerHook.removeGlobalComponent("BlackOverlay");
+  
+      setTimeout(() => {
+        serverAPI.routerHook.addGlobalComponent(
+          "BlackOverlay",
+          (props) => <Overlay {...props} opacity={pwmOpacity} />
+        );
+      }, 10); // Small delay to ensure proper re-render
+    }, 2000); // Wait 2 seconds after the last update
   };
 
-  serverAPI.routerHook.addGlobalComponent("BlackOverlay", (props) => <Overlay {...props} initOverlay={initOverlay} opacity={pwmOpacity} />);
+  serverAPI.routerHook.addGlobalComponent("BlackOverlay", (props) => <Overlay {...props} opacity={pwmOpacity} />);
 
   return {
   title: <div className={staticClasses.Title}>PWNless Brightness</div>,
