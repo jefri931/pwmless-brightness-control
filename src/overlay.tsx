@@ -1,5 +1,5 @@
 import { findModuleChild } from "decky-frontend-lib";
-import { VFC } from "react";
+import { useEffect, useState, VFC } from "react";
 
 enum UIComposition {
   Hidden = 0,
@@ -33,7 +33,11 @@ const UICompositionProxy: VFC = () => {
   return null;
 };
 
-const Overlay = ({ opacity = 0.5, backgroundColor = 'black' }) => {
+const Overlay = ({ opacity = 0.5, backgroundColor = 'black', initOverlay }) => {
+  const [dummy, setDummy] = useState(false)
+  useEffect(() => {
+    initOverlay(setDummy)
+  }, [])
   return (<div
     id="brightness_bar_container"
     style={{

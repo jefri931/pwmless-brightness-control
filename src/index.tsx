@@ -35,16 +35,23 @@ const BrightnessSettings = ({ onBrightnessChange }) => {
   );
 };
 
-export default definePlugin((serverAPI: ServerAPI) => {
-  const [opacity, setOpacity] = useState(localStorage.getItem("pwmlessbrightness") ?? 0); // Store brightness level
+let pwmOpacity = parseFloat(localStorage.getItem("pwmlessbrightness") ?? "0.0")
 
+export default definePlugin((serverAPI: ServerAPI) => {
   // Function to update brightness & trigger re-render of overlay
+  let rerenderOverlay: (() => void) | null = null
+  const initOverlay = (rerender: (() => void) | null) => {
+    rerenderOverlay = rerender
+  }
   const updateBrightness = (newOpacity: number) => {
-    setOpacity(newOpacity);
+    pwmOpacity = newOpacity
     localStorage.setItem("pwmlessbrightness", newOpacity.toString())
+    if(rerenderOverlay) {
+      rerenderOverlay()
+    }
   };
 
-  serverAPI.routerHook.addGlobalComponent("BlackOverlay", (props) => <Overlay {...props} opacity={opacity} />);
+  serverAPI.routerHook.addGlobalComponent("BlackOverlay", (props) => <Overlay {...props} initOverlay={initOverlay} opacity={pwmOpacity} />);
 
   return {
   title: <div className={staticClasses.Title}>PWNless Brightness</div>,
