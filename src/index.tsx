@@ -10,8 +10,16 @@ import { useState } from "react";
 import { FaEyeDropper } from "react-icons/fa";
 import Overlay from "./overlay";
 
-const BrightnessSettings = ({ onBrightnessChange, originalOpacity = 0.0 }) => {
-  const [opacity, setOpacity] = useState(originalOpacity);
+const getOpacityValue = () => {
+  return parseFloat(localStorage.getItem("pwmlessbrightness") ?? "0.5")
+}
+
+const getPwmBrightnessPercent = () => {
+  return 100 - (getOpacityValue() * 100)
+}
+
+const BrightnessSettings = ({ onBrightnessChange }) => {
+  const [opacity, setOpacity] = useState(getPwmBrightnessPercent());
 
   const updateBrightness = async (newOpacity: number) => {
     setOpacity(newOpacity);
@@ -25,8 +33,8 @@ const BrightnessSettings = ({ onBrightnessChange, originalOpacity = 0.0 }) => {
           label="Screen Brightness"
           value={opacity}
           min={0}
-          max={1}
-          step={0.01}
+          max={100}
+          step={1}
           showValue={true}
           onChange={updateBrightness}
         />
@@ -35,14 +43,14 @@ const BrightnessSettings = ({ onBrightnessChange, originalOpacity = 0.0 }) => {
   );
 };
 
-let pwmOpacity = parseFloat(localStorage.getItem("pwmlessbrightness") ?? "0.5")
+let pwmOpacity = getOpacityValue()
 let brightnessUpdateTimeout: NodeJS.Timeout | null = null; 
 
 export default definePlugin((serverAPI: ServerAPI) => {
   // Function to update brightness & trigger re-render of overlay
-  const updateBrightness = (newOpacity: number) => {
-    pwmOpacity = newOpacity
-    localStorage.setItem("pwmlessbrightness", newOpacity.toString())
+  const updateBrightness = (percent: number) => {
+    pwmOpacity = (100 - percent) / 100
+    localStorage.setItem("pwmlessbrightness", pwmOpacity.toString())
     if (brightnessUpdateTimeout) {
       clearTimeout(brightnessUpdateTimeout);
     }
@@ -64,6 +72,6 @@ export default definePlugin((serverAPI: ServerAPI) => {
 
   return {
   title: <div className={staticClasses.Title}>PWNless Brightness</div>,
-  content: <BrightnessSettings onBrightnessChange={updateBrightness} originalOpacity={pwmOpacity} />,
+  content: <BrightnessSettings onBrightnessChange={updateBrightness} />,
   icon: <FaEyeDropper />,
 }});
