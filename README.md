@@ -4,6 +4,8 @@ A plugin for [Decky](https://decky.xyz/) that can control the brightness of the 
 
 John 3:16
 
+The app adds a brightness slider inside the decky plugin.
+
 Steps to run from github:
 1. Open Desktop Mode
 2. Install Node.js 18 or newer
