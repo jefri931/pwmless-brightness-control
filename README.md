@@ -6,6 +6,14 @@ John 3:16
 
 The app adds a brightness slider inside the decky plugin.
 
+## Attribution
+
+This project is derived from [vibrantDeck](https://github.com/libvibrant/vibrantDeck) and is licensed under the GNU General Public License v3.0 to comply with the original project's licensing requirements. The vibrantDeck project is copyright (c) libvibrant and is licensed under the GNU General Public License v3.0.
+
+## License
+
+This project is licensed under the GNU General Public License v3.0 - see the [LICENSE](LICENSE) file for details.
+
 Steps to run from github:
 1. Open Desktop Mode
 2. Install Node.js 18 or newer

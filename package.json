@@ -1,7 +1,7 @@
 {
-  "name": "vibrant-deck",
-  "version": "2.0.1",
-  "description": "Adjust color settings of your Deck",
+  "name": "pwmless-brightness-control",
+  "version": "1.0.0",
+  "description": "Developed for people with sentivitity to PWM flickering. Allows you to adjust brightness without affecting PWM using a simple slider. The optimal way to use this is to set the brightness of the Steam Deck to 100% and then use the slider to adjust the brightness without affecting PWM.",
   "scripts": {
     "build": "shx rm -rf dist && rollup -c",
     "watch": "rollup -c -w",
@@ -10,14 +10,14 @@
   "keywords": [
     "decky",
     "plugin",
-    "vibrant",
-    "x11",
-    "libvibrant",
+    "pwm",
+    "brightness",
     "steam-deck",
-    "deck"
+    "deck",
+    "accessibility"
   ],
   "author": "Daniel Stoynev",
-  "license": "LGPL-3.0-or-later",
+  "license": "GPL-3.0",
   "devDependencies": {
     "@rollup/plugin-commonjs": "21.1.0",
     "@rollup/plugin-json": "4.1.0",

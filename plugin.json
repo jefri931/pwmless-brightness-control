@@ -3,8 +3,8 @@
   "author": "Daniel Stoynev",
   "flags": [],
   "publish": {
-    "tags": ["pwm", "birghtness"],
-    "description": "Adjust Brightness without PWM",
-    "image": "https://raw.githubusercontent.com/jefri931/pwmless-brightness-control/main/assets/Logo.jpg"
+    "tags": ["pwm", "brightness"],
+    "description": "Developed for people with sentivitity to PWM flickering. Allows you to adjust brightness without affecting PWM using a simple slider. The optimal way to use this is to set the brightness of the Steam Deck to 100% and then use the slider to adjust the brightness without affecting PWM.",
+    "image": "https://raw.githubusercontent.com/jefri931/pwmless-brightness-control/main/assets/Logo.JPG"
   }
 }
