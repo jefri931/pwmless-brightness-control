@@ -14,9 +14,6 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
- * This project is derived from vibrantDeck (https://github.com/libvibrant/vibrantDeck)
- * which is copyright (c) libvibrant and licensed under GNU General Public License v3.0.
  */
 
 import { findModuleChild } from "decky-frontend-lib";
